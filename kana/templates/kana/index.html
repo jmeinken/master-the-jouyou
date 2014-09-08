@@ -14,9 +14,9 @@
 	{% if hiragana_sections %}
 		{% for section in hiragana_sections %}
 		    {% if section.status == "complete" or section.status == "not_started" %}
-			    <a href="/kana/{{ section.start }}/" class="list-group-item">
+			    <a href="{% url 'kana:detail' section.start %}" class="list-group-item">
 			{% else %}
-			    <a href="/kana/{{ section.status }}/" class="list-group-item">
+			    <a href="{% url 'kana:detail' section.status %}" class="list-group-item">
 			{% endif %}
 				{% if section.status == "complete" %}
      	    		<img src="{% static "img/button_complete.jpg" %}" width="25" height="25" />&nbsp;&nbsp;&nbsp;&nbsp;
@@ -45,5 +45,5 @@
 {% endblock %}
 
 {% block links %}
-    <a href="/" class="btn btn-lg btn-link" role="button">&lt;&lt;&lt; Back to All Modules</a></button>
+    <a href="{% url 'home' %}" class="btn btn-lg btn-link" role="button">&lt;&lt;&lt; Back to All Modules</a></button>
 {% endblock %}

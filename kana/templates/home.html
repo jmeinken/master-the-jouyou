@@ -12,7 +12,7 @@
 
 {% block links %}
 	<h2>Character Modules</h2>
-	<a href="/kana/" class="list-group-item">
+	<a href="{% url 'kana:index' %}" class="list-group-item">
 		{% if hiragana_section_finished %}
 			<img src="{% static "img/button_complete.jpg" %}" width="25" height="25" />&nbsp;&nbsp;&nbsp;&nbsp;
 			Module 1: Hiragana

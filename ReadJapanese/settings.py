@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'kana',
+    'account_manager'
 )
 
 MIDDLEWARE_CLASSES = (
