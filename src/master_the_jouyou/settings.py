@@ -1,5 +1,5 @@
 """
-Django settings for ReadJapanese project.
+Django settings for master_the_jouyou project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/dev/topics/settings/
@@ -50,9 +50,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'ReadJapanese.urls'
+ROOT_URLCONF = 'master_the_jouyou.urls'
 
-WSGI_APPLICATION = 'ReadJapanese.wsgi.application'
+WSGI_APPLICATION = 'master_the_jouyou.wsgi.application'
 
 
 # Database
@@ -90,5 +90,5 @@ STATIC_URL = '/static/'
 # during development
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
-    'C:/Users/John/workspace/ReadJapanese/static',
+    'C:/Users/John/workspace/master-the-jouyou/static',
 )

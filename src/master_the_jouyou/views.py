@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from kana.models import base_kana, derived_kana, hiragana_sections
 from account_manager.models import account_data
 
-from ReadJapanese.forms import UserForm
+from master_the_jouyou.forms import UserForm
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
