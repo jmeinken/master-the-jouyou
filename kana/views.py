@@ -1,6 +1,10 @@
 from django.shortcuts import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from kana.models import base_kana, derived_kana, hiragana_sections
+from account_manager.helpers import getSessionOrAccountData, \
+                    setSessionOrAccountData, \
+                    deleteSessionOrAccountData
+                    
 
 
 
@@ -11,10 +15,12 @@ def index(request):
     for i,section in enumerate(hiragana_sections):
         section_finished_key = "section_" + str(i) + "_finished"
         section_char_id_key = "section_" + str(i) + "_char_id"
-        if section_finished_key in request.session.keys():
+        # if section_finished_key in request.session.keys():
+        if getSessionOrAccountData(request, section_finished_key):
             hiragana_sections[i]['status'] = "complete"
-        elif section_char_id_key in request.session.keys():
-            hiragana_sections[i]['status'] = request.session[section_char_id_key]
+        # elif section_char_id_key in request.session.keys():
+        elif getSessionOrAccountData(request, section_char_id_key):
+            hiragana_sections[i]['status'] = getSessionOrAccountData(request, section_char_id_key)
             if not next_incomplete_section_found:
                 next_incomplete_section = section['section']
                 next_incomplete_section_found = True
@@ -23,11 +29,18 @@ def index(request):
             if not next_incomplete_section_found:
                 next_incomplete_section = section['section']
                 next_incomplete_section_found = True
-        print(hiragana_sections[i]['status'])
     #end session management
+    if request.user.is_authenticated():
+        logged_in = True
+        username = request.user.username
+    else:
+        logged_in = False
+        username = None
     context = {'some_kana': some_kana, 
                'hiragana_sections': hiragana_sections,
-               'next_incomplete_section': next_incomplete_section}
+               'next_incomplete_section': next_incomplete_section,
+               'logged_in': logged_in,
+               'username': username,}
     return render(request, 'kana/index.html', context)
 
 def detail(request, kana_id):
@@ -53,8 +66,10 @@ def detail(request, kana_id):
     section_char_id_key = "section_" + str(section_index) + "_char_id"
     if not section_finished_key in request.session.keys():
         if last_in_section:
-            request.session[section_finished_key] = True
-            del request.session[section_char_id_key]
+            # request.session[section_finished_key] = True
+            setSessionOrAccountData(request, section_finished_key, True)
+            # del request.session[section_char_id_key]
+            deleteSessionOrAccountData(request, section_char_id_key)
             hiragana_section_finished = True
             for i,section in enumerate(hiragana_sections):
                 this_section_finished_key = "section_" + str(i) + "_finished"
@@ -62,11 +77,20 @@ def detail(request, kana_id):
                     hiragana_section_finished = False
             if hiragana_section_finished:
                 print("oh no, it was called")
-                request.session['hiragana_section_finished'] = True 
+                # request.session['hiragana_section_finished'] = True 
+                setSessionOrAccountData(request, 'hiragana_section_finished', True)
         else:            
-            request.session[section_char_id_key] = kana_id
-            request.session['hiragana_section_started'] = True
+            # request.session[section_char_id_key] = kana_id
+            setSessionOrAccountData(request, section_char_id_key, kana_id)
+            # request.session['hiragana_section_started'] = True
+            setSessionOrAccountData(request, 'hiragana_section_started', True)
     # end session management
+    if request.user.is_authenticated():
+        logged_in = True
+        username = request.user.username
+    else:
+        logged_in = False
+        username = None
     context = {'kana': kana, 
                'nextKana': nextKana, 
                'previousKana': previousKana,
@@ -76,7 +100,9 @@ def detail(request, kana_id):
                'section': hiragana_sections[section_index],
                'section_name': section_name,
                'first_in_section': first_in_section,
-               'last_in_section': last_in_section,}
+               'last_in_section': last_in_section,
+               'logged_in': logged_in,
+               'username': username,}
     return render(request, 'kana/detail.html', context)
 
 def results(request, kana_id):

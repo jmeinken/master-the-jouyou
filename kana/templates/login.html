@@ -1,4 +1,10 @@
-{% extends "core_shell.html" %}
+{% extends "no_sidebar_shell.html" %}
+
+{% block header %}
+Login
+{% endblock %}
+
+
 
 {% block content %}
 
@@ -24,3 +30,7 @@
 </form>
 
 {% endblock %}
+
+{% block links %}
+<a href="{% url 'adduser' %}">Create a new account</a>
+{% endblock %} 
