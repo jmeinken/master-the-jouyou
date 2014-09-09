@@ -1,0 +1,21 @@
+{% extends "no_sidebar_shell.html" %}
+
+
+{% block header %}
+	Create Account
+{% endblock %}
+
+{% block content %}{% endblock %}
+
+
+{% block links %}
+
+<form method="post" action="">
+    {% csrf_token %}
+    <table>
+    {{ form }}
+    </table>
+    <input type="submit" value="Create new user account" />
+</form>
+
+{% endblock %}

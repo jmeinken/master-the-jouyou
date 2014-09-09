@@ -1,0 +1,10 @@
+{% extends "core_shell.html" %}
+
+
+{% block right_navbar %}
+    <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+        <div class="list-group">
+            {% block section_navigation %} Enter navigation {% endblock %}
+        </div>
+    </div>
+{% endblock %}
