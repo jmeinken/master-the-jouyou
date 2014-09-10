@@ -4,6 +4,8 @@ from kana.models import base_kana, derived_kana, hiragana_sections
 from account_manager.helpers import getSessionOrAccountData, \
                     setSessionOrAccountData, \
                     deleteSessionOrAccountData
+import json
+from django.utils.html import strip_tags
                     
 
 
@@ -84,6 +86,7 @@ def detail(request, kana_id):
             setSessionOrAccountData(request, section_char_id_key, kana_id)
             # request.session['hiragana_section_started'] = True
             setSessionOrAccountData(request, 'hiragana_section_started', True)
+    user_mnemonic = getSessionOrAccountData(request, 'kana_mnemonic_' + kana_id)
     # end session management
     if request.user.is_authenticated():
         logged_in = True
@@ -102,12 +105,25 @@ def detail(request, kana_id):
                'first_in_section': first_in_section,
                'last_in_section': last_in_section,
                'logged_in': logged_in,
-               'username': username,}
+               'username': username,
+               'user_mnemonic': user_mnemonic}
     return render(request, 'kana/detail.html', context)
 
 def results(request, kana_id):
     response = "You're looking at the results of question %s."
     return HttpResponse(response % kana_id)
+
+def mnemonics_handler(request):
+    if request.is_ajax():
+        key = "kana_mnemonic_" + request.GET['kana_number']
+        setSessionOrAccountData(request, 
+                                key,
+                                strip_tags(request.GET['mnemonics_text']))
+        result = getSessionOrAccountData(request, key)
+        if not result:
+            kana = get_object_or_404(base_kana, pk=request.GET['kana_number'])
+            result = kana.mnemonic
+        return HttpResponse(json.dumps( {'mnemonics_text': result} ))
 
 def test(request):
     return render(request, 'kana/test.html', None)

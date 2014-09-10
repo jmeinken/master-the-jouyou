@@ -10,7 +10,7 @@
 	<!-- Optional theme -->
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <title>{% block title %}Master the Jo&#773;yo&#773;{% endblock %}</title>
@@ -20,19 +20,7 @@
 	    }
     </style>
     <script type="text/javascript">
-	    $(document).keydown(function(e) {
-		    if (e.which == 37) { 
-		       {% block left_arrow_action %}{% endblock %}
-		       e.preventDefault();
-		       return false;
-		    }
-		
-		    if (e.which == 39) { 
-		       {% block right_arrow_action %}{% endblock %}
-		       e.preventDefault();
-		       return false;
-		    }
-		});
+        {% block js %}{% endblock %}
 	</script>
     
 </head>
