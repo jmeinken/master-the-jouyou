@@ -24,6 +24,32 @@ $(function() {
     
 });
 
+//action on left arrow (37) and right arrow (39) keypress
+$(document).keydown(function(e) {
+		    if (e.which == 37) { 
+		       {% if not first_in_section %}
+	               window.location = "{% url 'kana:detail' previousKana %}";
+	           {% elif module_name == 'hiragana' %}
+	               window.location = "{% url 'kana:hiragana' %}";
+	           {% else %}
+	               window.location = "{% url 'kana:katakana' %}";
+	           {% endif %}
+		       e.preventDefault();
+		       return false;
+		    }	
+		    if (e.which == 39) { 
+		       {% if not last_in_section %}
+				    window.location = "{% url 'kana:detail' nextKana %}";
+			   {% elif module_name == 'hiragana' %}
+	               window.location = "{% url 'kana:hiragana' %}";
+	           {% else %}
+	               window.location = "{% url 'kana:katakana' %}";
+			   {% endif %}
+		       e.preventDefault();
+		       return false;
+		    }
+		});
+
 
 
 
@@ -88,17 +114,25 @@ $(function() {
 {% block links %}
     {% if not first_in_section %}
 	    <a href="{% url 'kana:detail' previousKana %}">&laquo; Previous character</a> &nbsp;&nbsp;&nbsp;&nbsp;
-	{% elif not kana.id == 1 %}
+	{% elif not first_in_module %}
 	    <a href="{% url 'kana:detail' previousKana %}" style="color:#EB9316;" role="button">
 	    	&lt;&lt;&lt; Previous Section</a> &nbsp;&nbsp;&nbsp;&nbsp;
 	{% endif %}
 	{% if not last_in_section %}
     	<a href="{% url 'kana:detail' nextKana %}" class="btn btn-primary" role="button">Next character &raquo;</a>
-    {% else %}
+    {% elif not last_in_module %}
 	    <a href="{% url 'kana:detail' nextKana %}" class="btn btn-warning" role="button">Next Section &raquo;</a>
 	{% endif %}
     <br /><br />
-    <a href="{% url 'kana:index' %}" class="btn btn-lg btn-link" role="button">&lt;&lt;&lt; Back to Hiragana Module</a></button>
+    {% if module_name == 'hiragana' %}
+	    <a href="{% url 'kana:hiragana' %}" class="btn btn-lg btn-link" role="button">
+	        &lt;&lt;&lt; Back to Hiragana Module
+	    </a>
+    {% else %}
+	    <a href="{% url 'kana:katakana' %}" class="btn btn-lg btn-link" role="button">
+	        &lt;&lt;&lt; Back to Katakana Module
+	    </a>
+    {% endif %}
 {% endblock %}
 
 

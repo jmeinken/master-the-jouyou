@@ -2,17 +2,17 @@
 {% load staticfiles %}
 
 {% block title %}
-	Hiragana: Master the Jo&#773;yo&#773;
+	{{ module_name }}: Master the Jo&#773;yo&#773;
 {% endblock %}
 
 {% block header %}
-	Module 1: Hiragana
+	Module {{ module_number }}: {{ module_name }}
 {% endblock %}
 
 
 {% block content %}
-	{% if hiragana_sections %}
-		{% for section in hiragana_sections %}
+	{% if sections %}
+		{% for section in sections %}
 		    {% if section.status == "complete" or section.status == "not_started" %}
 			    <a href="{% url 'kana:detail' section.start %}" class="list-group-item">
 			{% else %}
@@ -25,11 +25,7 @@
      	    	{% else %}
      	    	    <img src="{% static "img/button_incomplete.jpg" %}" width="25" height="25" />&nbsp;&nbsp;&nbsp;&nbsp;
      	    	{% endif %}
-     	    	{% if section.name %}
-     	    	    Section {{ section.section }}: {{ section.name }}
-     	    	{% else %}
-     	    		Section {{ section.section }}: Hiragana {{ section.start }} - {{ section.end }}
-     	    	{% endif %}
+     	    	Section {{ section.section }}: {{ section.name }}
      	    	{% if next_incomplete_section == section.section %}
      	    	    {% if section.status == "not_started" %}
      	    	    	<span class="label label-success pull-right" style="font-size:18px">start &raquo;</span>

@@ -1,8 +1,6 @@
 
 from account_manager.models import account_data
 
-
-
 def getSessionOrAccountData(request, key):
     if request.user.is_authenticated():
         username = request.user.username
@@ -10,7 +8,6 @@ def getSessionOrAccountData(request, key):
             record = account_data.objects.get(username=username, key=key)
             return record.value
         except:
-            print(key, 'nothing returned')
             return None
     else:
         if key in request.session.keys():

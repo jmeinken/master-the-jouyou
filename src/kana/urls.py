@@ -2,8 +2,10 @@ from django.conf.urls import url
 from kana import views
 
 urlpatterns = [
-    # ex: /kana/
-    url(r'^$', views.index, name='index'),
+    # ex: /kana/hiragana/
+    url(r'^hiragana/$', views.hiragana, name='hiragana'),
+    # ex: /kana/katakana/
+    url(r'^katakana/$', views.katakana, name='katakana'),
     # ex: /kana/test/
     url(r'^test/', views.test, name='test'),
     # ex: /kana/mnemonics_handler/
