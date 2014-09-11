@@ -13,10 +13,10 @@
 {% block links %}
 	<h2>Character Modules</h2>
 	<a href="{% url 'kana:hiragana' %}" class="list-group-item">
-		{% if hiragana_section_finished %}
+		{% if hiragana_module_finished %}
 			<img src="{% static "img/button_complete.jpg" %}" width="25" height="25" />&nbsp;&nbsp;&nbsp;&nbsp;
 			Module 1: Hiragana
-		{% elif hiragana_section_started %}
+		{% elif hiragana_module_started %}
 			<img src="{% static "img/button_incomplete.jpg" %}" width="25" height="25" />&nbsp;&nbsp;&nbsp;&nbsp;
 			Module 1: Hiragana
 			<span class="label label-success pull-right" style="font-size:18px">continue &raquo;</span>
@@ -24,12 +24,19 @@
 			<img src="{% static "img/button_not_started.jpg" %}" width="25" height="25" />&nbsp;&nbsp;&nbsp;&nbsp;
 			Module 1: Hiragana
 			<span class="label label-success pull-right" style="font-size:18px">start &raquo;</span>
-		{% endif %}
-		
+		{% endif %}	
 	</a>
 	<a href="{% url 'kana:katakana' %}" class="list-group-item">
-		<img src="{% static "img/button_not_started.jpg" %}" width="25" height="25" />&nbsp;&nbsp;&nbsp;&nbsp;
-		Module 2: Katakana
+		{% if katakana_module_finished %}
+			<img src="{% static "img/button_complete.jpg" %}" width="25" height="25" />&nbsp;&nbsp;&nbsp;&nbsp;
+			Module 2: Katakana
+		{% elif katakana_module_started %}
+			<img src="{% static "img/button_incomplete.jpg" %}" width="25" height="25" />&nbsp;&nbsp;&nbsp;&nbsp;
+			Module 2: Katakana
+		{% else %}
+			<img src="{% static "img/button_not_started.jpg" %}" width="25" height="25" />&nbsp;&nbsp;&nbsp;&nbsp;
+			Module 2: Katakana
+		{% endif %}	
 	</a>
 	<a href="#" class="list-group-item">
 		<img src="{% static "img/button_not_started.jpg" %}" width="25" height="25" />&nbsp;&nbsp;&nbsp;&nbsp;

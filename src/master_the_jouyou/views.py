@@ -18,16 +18,26 @@ from account_manager.helpers import getSessionOrAccountData, \
 
 def index(request):
     # session management
-    # if 'hiragana_section_started' in request.session.keys():
-    if getSessionOrAccountData(request, 'hiragana_section_started'):
-        hiragana_section_started = True
+    # if 'hiragana_module_started' in request.session.keys():
+    if getSessionOrAccountData(request, 'hiragana_module_started'):
+        hiragana_module_started = True
     else:
-        hiragana_section_started = False
-    # if 'hiragana_section_finished' in request.session.keys():
-    if getSessionOrAccountData(request, 'hiragana_section_finished'):
-        hiragana_section_finished = True
+        hiragana_module_started = False
+    # if 'hiragana_module_finished' in request.session.keys():
+    if getSessionOrAccountData(request, 'hiragana_module_finished'):
+        hiragana_module_finished = True
     else:
-        hiragana_section_finished = False
+        hiragana_module_finished = False
+    # if 'katakana_module_started' in request.session.keys():
+    if getSessionOrAccountData(request, 'katakana_module_started'):
+        katakana_module_started = True
+    else:
+        katakana_module_started = False
+    # if 'katakana_module_finished' in request.session.keys():
+    if getSessionOrAccountData(request, 'katakana_module_finished'):
+        katakana_module_finished = True
+    else:
+        katakana_module_finished = False
     #end session management
     if request.user.is_authenticated():
         logged_in = True
@@ -35,8 +45,10 @@ def index(request):
     else:
         logged_in = False
         username = None
-    context = {'hiragana_section_started': hiragana_section_started, 
-               'hiragana_section_finished': hiragana_section_finished,
+    context = {'hiragana_module_started': hiragana_module_started, 
+               'hiragana_module_finished': hiragana_module_finished,
+               'katakana_module_started': katakana_module_started, 
+               'katakana_module_finished': katakana_module_finished,
                'logged_in': logged_in,
                'username': username,
                # 'next_incomplete_section': next_incomplete_section

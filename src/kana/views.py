@@ -114,24 +114,19 @@ def detail(request, kana_id):
     section_char_id_key = module_name + "_section_" + str(section_index) + "_char_id"
     if not section_finished_key in request.session.keys():
         if last_in_section:
-            # request.session[section_finished_key] = True
             setSessionOrAccountData(request, section_finished_key, True)
-            # del request.session[section_char_id_key]
             deleteSessionOrAccountData(request, section_char_id_key)
-            section_finished = True
+            module_finished = True
             for i,section in enumerate(sections):
                 this_section_finished_key = module_name + "_section_" + str(i) + "_finished"
-                if not this_section_finished_key in request.session.keys():
-                    section_finished = False
-            if section_finished:
-                print("oh no, it was called")
-                # request.session['hiragana_section_finished'] = True 
-                setSessionOrAccountData(request, module_name + '_section_finished', True)
+                # if not this_section_finished_key in request.session.keys():
+                if not getSessionOrAccountData(request, this_section_finished_key):
+                    module_finished = False
+            if module_finished:
+                setSessionOrAccountData(request, module_name + '_module_finished', True)
         else:            
-            # request.session[section_char_id_key] = kana_id
             setSessionOrAccountData(request, section_char_id_key, kana_id)
-            # request.session['hiragana_section_started'] = True
-            setSessionOrAccountData(request, module_name + '_section_started', True)
+            setSessionOrAccountData(request, module_name + '_module_started', True)
     user_mnemonic = getSessionOrAccountData(request, 'kana_mnemonic_' + kana_id)
     # end session management
     if request.user.is_authenticated():
