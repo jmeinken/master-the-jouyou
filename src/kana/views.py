@@ -109,6 +109,14 @@ def detail(request, kana_id):
     section_start_id = sections[section_index]['start'] - 1
     section_end_id = sections[section_index]['end'] - 1
     section_kanas = base_kana.objects.all().order_by('id')[section_start_id:section_end_id+1]
+    if kana.id == sections[-1]['end']:
+        last_in_module = True
+    else:
+        last_in_module = False
+    if kana.id == sections[0]['start']:
+        first_in_module = True
+    else:
+        first_in_module = False
     # session management
     section_finished_key = module_name + "_section_" + str(section_index) + "_finished"
     section_char_id_key = module_name + "_section_" + str(section_index) + "_char_id"
@@ -124,7 +132,7 @@ def detail(request, kana_id):
                     module_finished = False
             if module_finished:
                 setSessionOrAccountData(request, module_name + '_module_finished', True)
-        else:            
+        elif not first_in_section:            
             setSessionOrAccountData(request, section_char_id_key, kana_id)
             setSessionOrAccountData(request, module_name + '_module_started', True)
     user_mnemonic = getSessionOrAccountData(request, 'kana_mnemonic_' + kana_id)
@@ -135,14 +143,6 @@ def detail(request, kana_id):
     else:
         logged_in = False
         username = None
-    if kana.id == sections[-1]['end']:
-        last_in_module = True
-    else:
-        last_in_module = False
-    if kana.id == sections[0]['start']:
-        first_in_module = True
-    else:
-        first_in_module = False
     context = {'kana': kana, 
                'nextKana': nextKana, 
                'previousKana': previousKana,

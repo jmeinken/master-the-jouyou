@@ -19,7 +19,7 @@ $(function() {
     
     function myHandler(data)  {
         var obj = jQuery.parseJSON( data );
-        $('#mnemonic').html('<em>Mnemonic:</em> ' + obj.mnemonics_text);
+        $('#mnemonic').html('<em>Mnemonic:</em> ' + obj.mnemonics_text + '<br>');
     }
     
 });
@@ -56,15 +56,19 @@ $(document).keydown(function(e) {
 {% endblock %}
 
 
-
 {% block header %}
-	<a href="{% url 'kana:detail' kana.id %}">{{ kana.kana }}</a>
+<span style="color:#CC5200;font-size:100px;">
+	{{ kana.kana }}
+</span>
 {% endblock %}
 
 
 
 {% block content %}
-	<p><strong>{{ kana.pronunciation }}</strong> ({{ kana.pronunciation_tip }})
+	<p><strong>{{ kana.pronunciation }}</strong>
+	{% if kana.pronunciation_tip %}
+	    ({{ kana.pronunciation_tip }})
+	{% endif %}
     {% if modifications %}
     <br /><em>Modifications:</em>
     {% for kana in modifications %}
@@ -74,18 +78,21 @@ $(document).keydown(function(e) {
         </p>
     <span id="mnemonic">
 	    {% if user_mnemonic %}
-	        <em>Mnemonic:</em> {{ user_mnemonic }}<br />
+	        <em>Mnemonic:</em> {{ user_mnemonic }}<br>
 	    {% elif kana.mnemonic %}
-	        <em>Mnemonic:</em> {{ kana.mnemonic }}<br /> 
+	        <em>Mnemonic:</em> {{ kana.mnemonic }}<br>
 	    {% endif %}
     </span>
+    {% if kana.comment %}
+        <br /><div class="alert alert-info" role="alert"><strong>note:</strong> {{ kana.comment }}</div>
+    {% endif %}
 	<hr>
-	<a href="#" data-toggle="collapse" data-target="#demo">More Info</a>
+	<a href="#" data-toggle="collapse" data-target="#demo">Show More</a>
     <div id="demo" class="collapse">
     <em>Add/Change mnemonic:</em>
 	    <form name="mnemonics_form" id="mnemonics_form" action="">
 	        <input type="hidden" name="kana_number" value="{{ kana.id }}" />
-	        <textarea name="mnemonics_text" id="mnemonics_text" rows="4" cols="50"
+	        <textarea name="mnemonics_text" id="mnemonics_text" rows="4" cols="50" maxlength="500"
 	            >{% if user_mnemonic %}{{ user_mnemonic }}{% endif %}</textarea>
 	        <input type="submit" name="submit" class="button" id="mnemonics_button" value="Submit" />
 	    </form>
@@ -96,7 +103,7 @@ $(document).keydown(function(e) {
 
 {% block section_navigation %}
    {% if section_kanas %}
-       <span class="list-group-item active">{{ section_name }}</span>
+       <span class="list-group-item active" style="background-color:#033c73">{{ section_name }}</span>
     {% for section_kana in section_kanas %}
         {% if section_kana.id == kana.id %}
             <a href="{% url 'kana:detail' section_kana.id %}" class="list-group-item active">{{ section_kana.kana }}</a>

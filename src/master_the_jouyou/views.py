@@ -74,11 +74,24 @@ def adduser(request):
             new_user = authenticate(username=request.POST['username'], password=request.POST['password'])
             login(request, new_user)
             # redirect, or however you want to get to the main view
-            return redirect('home')
+            return redirect('adduser_confirmation')
     else:
         form = UserForm() 
-
     return render(request, 'adduser.html', {'form': form}) 
+
+def adduser_confirmation(request):
+    if request.user.is_authenticated():
+        logged_in = True
+        username = request.user.username
+        email = User.objects.get(username=request.user.username).email
+    else:
+        return redirect('adduser')
+    context = {
+               'logged_in': logged_in,
+               'username': username,
+               'email': email,
+               }
+    return render(request, 'adduser_confirmation.html', context)
 
 def logout_user(request):
     logout(request)

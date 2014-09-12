@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^$', 'master_the_jouyou.views.index', name='home'),
     # url(r'^blog/', include('blog.urls')),
     url(r'^adduser/', 'master_the_jouyou.views.adduser', name='adduser'),
+    url(r'^adduser_confirmation/', 'master_the_jouyou.views.adduser_confirmation', name='adduser_confirmation'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login/$', auth_views.login, {'template_name': 'login.html'
                                         ''}, name='login'),

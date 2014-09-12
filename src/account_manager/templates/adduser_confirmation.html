@@ -1,0 +1,29 @@
+{% extends "no_sidebar_shell.html" %}
+
+
+{% block header %}
+	Account Created
+{% endblock %}
+
+{% block content %}{% endblock %}
+
+
+{% block links %}
+
+<p><strong>You have successfully created an account.</strong></p>
+
+<table class="table table-striped table-hover ">
+    <tr>
+        <th>Username</th>
+        <td>{{ username }}</td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td>{{ email }}</td>
+    </tr>
+</table>
+
+
+<a href="{% url 'home' %}" class="btn btn-lg btn-link" role="button">&lt;&lt;&lt; Back to All Modules</a></button>
+
+{% endblock %}
