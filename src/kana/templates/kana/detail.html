@@ -67,6 +67,23 @@ $(document).keydown(function(e) {
 
 
 {% block content %}
+    <div class="top_left">
+	    {% if not first_in_section %}
+		    <a href="{% url 'kana:detail' previousKana %}">&laquo; Previous character</a> &nbsp;&nbsp;&nbsp;&nbsp;
+		{% elif not first_in_module %}
+		    <a href="{% url 'kana:detail' previousKana %}" style="color:#EB9316;" role="button">
+		    	&lt;&lt;&lt; Previous Section</a> &nbsp;&nbsp;&nbsp;&nbsp;
+		{% endif %}
+    </div>
+    <div class="top_right">
+	    {% if not last_in_section %}
+	    	<a href="{% url 'kana:detail' nextKana %}" class="btn btn-primary" role="button">Next character &raquo;</a>
+	    {% elif not last_in_module %}
+		    <a href="{% url 'kana:detail' nextKana %}" class="btn btn-warning" role="button">Next Section &raquo;</a>
+		{% endif %}
+    </div>
+    
+    
 	<p>
 	<span style="text-size: 30px">
 		[ <strong>{% autoescape off %}{{ pronunciation }}{% endautoescape %}</strong> ]
@@ -111,9 +128,13 @@ $(document).keydown(function(e) {
        <span class="list-group-item active" style="background-color:#033c73">{{ section_name }}</span>
     {% for section_kana in section_kanas %}
         {% if section_kana.id == kana.id %}
-            <a href="{% url 'kana:detail' section_kana.id %}" class="list-group-item active">{{ section_kana.kana }}</a>
+            <a href="{% url 'kana:detail' section_kana.id %}" class="list-group-item active">
+                {{ section_kana.id }}. <strong>[ {{ section_kana.kana }} ]</strong>
+            </a>
         {% else %}
-            <a href="{% url 'kana:detail' section_kana.id %}" class="list-group-item">{{ section_kana.kana }}</a>
+            <a href="{% url 'kana:detail' section_kana.id %}" class="list-group-item">
+                {{ section_kana.id }}. <strong>[ {{ section_kana.kana }} ]</strong>
+            </a>
         {% endif %}
     {% endfor %}
 {% else %}
@@ -124,18 +145,6 @@ $(document).keydown(function(e) {
 
 
 {% block links %}
-    {% if not first_in_section %}
-	    <a href="{% url 'kana:detail' previousKana %}">&laquo; Previous character</a> &nbsp;&nbsp;&nbsp;&nbsp;
-	{% elif not first_in_module %}
-	    <a href="{% url 'kana:detail' previousKana %}" style="color:#EB9316;" role="button">
-	    	&lt;&lt;&lt; Previous Section</a> &nbsp;&nbsp;&nbsp;&nbsp;
-	{% endif %}
-	{% if not last_in_section %}
-    	<a href="{% url 'kana:detail' nextKana %}" class="btn btn-primary" role="button">Next character &raquo;</a>
-    {% elif not last_in_module %}
-	    <a href="{% url 'kana:detail' nextKana %}" class="btn btn-warning" role="button">Next Section &raquo;</a>
-	{% endif %}
-    <br /><br />
     {% if module_name == 'hiragana' %}
 	    <a href="{% url 'kana:hiragana' %}" class="btn btn-lg btn-link" role="button">
 	        &lt;&lt;&lt; Back to Hiragana Module
