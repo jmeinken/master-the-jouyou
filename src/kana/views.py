@@ -6,6 +6,7 @@ from account_manager.helpers import getSessionOrAccountData, \
                     deleteSessionOrAccountData
 import json
 from django.utils.html import strip_tags
+from kana.helpers import add_popovers
                     
 
 
@@ -137,6 +138,10 @@ def detail(request, kana_id):
             setSessionOrAccountData(request, module_name + '_module_started', True)
     user_mnemonic = getSessionOrAccountData(request, 'kana_mnemonic_' + kana_id)
     # end session management
+    if module_name=="katakana":
+        pronunciation = add_popovers(request, kana.pronunciation)
+    else:
+        pronunciation = kana.pronunciation
     if request.user.is_authenticated():
         logged_in = True
         username = request.user.username
@@ -158,7 +163,8 @@ def detail(request, kana_id):
                'username': username,
                'user_mnemonic': user_mnemonic,
                'last_in_module': last_in_module,
-               'first_in_module': first_in_module,}
+               'first_in_module': first_in_module,
+               'pronunciation': pronunciation}
     return render(request, 'kana/detail.html', context)
 
 def results(request, kana_id):

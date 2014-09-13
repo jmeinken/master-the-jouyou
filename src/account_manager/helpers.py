@@ -33,6 +33,7 @@ def deleteSessionOrAccountData(request, key):
         username = request.user.username
         account_data.objects.filter(username=username).filter(key=key).delete()
     else:
-        del request.session[key]
+        if key in request.session.keys():
+            del request.session[key]
         
 

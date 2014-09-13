@@ -22,6 +22,8 @@ $(function() {
         $('#mnemonic').html('<em>Mnemonic:</em> ' + obj.mnemonics_text + '<br>');
     }
     
+    $('.add_popover').popover({ html : true });
+    
 });
 
 //action on left arrow (37) and right arrow (39) keypress
@@ -65,14 +67,17 @@ $(document).keydown(function(e) {
 
 
 {% block content %}
-	<p><strong>{{ kana.pronunciation }}</strong>
+	<p>
+	<span style="text-size: 30px">
+		[ <strong>{% autoescape off %}{{ pronunciation }}{% endautoescape %}</strong> ]
+	</span>&nbsp;&nbsp;
 	{% if kana.pronunciation_tip %}
-	    ({{ kana.pronunciation_tip }})
+	    {{ kana.pronunciation_tip }}
 	{% endif %}
     {% if modifications %}
     <br /><em>Modifications:</em>
     {% for kana in modifications %}
-        {{ kana.kana }}  ({{ kana.pronunciation }})&nbsp;&nbsp;&nbsp;&nbsp;
+        {{ kana.kana }}  ({{kana.pronunciation }})&nbsp;&nbsp;&nbsp;&nbsp;
     {% endfor %}
     {% endif %}	 
         </p>

@@ -8,7 +8,7 @@ class base_kana(models.Model):
     pronunciation = models.CharField(max_length=10)
     pronunciation_tip = models.CharField(max_length=200, null=True, blank=True)
     mnemonic = models.CharField(max_length=200, null=True, blank=True)
-    comment = models.CharField(max_length=200, null=True, blank=True)
+    comment = models.CharField(max_length=1000, null=True, blank=True)
     vowel_group = models.CharField(max_length=5, null=True, blank=True)
     consonant_group = models.CharField(max_length=5, null=True, blank=True)
 
@@ -19,7 +19,7 @@ class derived_kana(models.Model):
     base_kana_id = models.ForeignKey(base_kana)
     pronunciation = models.CharField(max_length=10)
     pronunciation_tip = models.CharField(max_length=200, null=True, blank=True)
-    comment = models.CharField(max_length=200, null=True, blank=True)
+    comment = models.CharField(max_length=1000, null=True, blank=True)
     vowel_group = models.CharField(max_length=5, null=True, blank=True)
     consonant_group = models.CharField(max_length=5, null=True, blank=True)
     
