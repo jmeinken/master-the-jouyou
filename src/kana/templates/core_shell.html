@@ -38,6 +38,7 @@
 		    top: 10px;
 		    left: 25px;
 	    }
+	    {% block css %}{% endblock %}
     </style>
     <script type="text/javascript">
         {% block js %}{% endblock %}
@@ -60,7 +61,13 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="{% url 'home' %}">Character Modules</a></li>
-                    <li><a href="#">Practice</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Practice <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="{% url 'kana:practice' %}">Hiragana Practice</a></li>
+                            <li><a href="#">Katakana Practice</a></li>
+                        </ul>
+                    </li>
                     <li><a href="#">About</a></li>
                     <li class="dropdown">
                         {% if logged_in %}

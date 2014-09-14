@@ -6,7 +6,7 @@ from account_manager.helpers import getSessionOrAccountData, \
                     deleteSessionOrAccountData
 import json
 from django.utils.html import strip_tags
-from kana.helpers import add_popovers
+from kana.helpers import *
                     
 
 
@@ -185,6 +185,19 @@ def mnemonics_handler(request):
 
 def test(request):
     return render(request, 'kana/test.html', None)
+
+def practice(request):
+    kana1 = get_object_or_404(base_kana, pk=1)
+    kana2 = get_object_or_404(base_kana, pk=40)
+    kana3 = get_object_or_404(base_kana, pk=6)
+    kana4 = get_object_or_404(base_kana, pk=20)
+    kana5 = get_object_or_404(base_kana, pk=3)
+    arigatou = kana1.kana + kana2.kana + kana3.kana + kana4.kana + kana5.kana  
+    mystr = practicify(request, arigatou)
+    context = {'mystr': mystr
+               
+               }
+    return render(request, 'kana/practice.html', context)
 
 
             

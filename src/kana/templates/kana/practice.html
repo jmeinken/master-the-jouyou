@@ -1,0 +1,76 @@
+{% extends "right_sidebar_shell.html" %}
+{% load staticfiles %}
+
+{% block title %}
+	[ Practice ] Master the Jo&#773;yo&#773;
+{% endblock %}
+
+{% block css %}
+	.pronunciation {
+	    font-size: 20px;
+	    text-align: center;
+	    visibility: hidden;
+	}
+	.char  {
+	    font-size: 70px;
+	    text-align: center;
+	}
+    #translation  {
+    	visibility: hidden;
+    }
+	.center_table {
+	  margin: 0 auto !important;
+	  float: none !important;
+	}
+{% endblock %}
+
+
+{% block js %}
+		
+//ajax for mnemonics change
+$(function() {
+    
+    $('.add_popover').popover({ html : true });
+    
+    $('#show_element').click(function() {
+        $('.pronunciation').css('visibility', 'visible');
+        $('#translation').css('visibility', 'visible');
+        $('#show_element').html('next question &raquo;');
+    });
+    
+
+    
+});
+
+{% endblock %}
+
+
+{% block header %}Hiragana Practice{% endblock %}
+
+{% block content %}
+    <div class="top_left">
+	    <a href="#">&laquo; Previous question</a>
+    </div>
+    <div class="top_right">
+     	<a href="#" class="btn btn-primary" role="button">Next question &raquo;</a>
+    </div>
+{% endblock %}
+
+
+
+{% block links %}
+	<div class="text-center">
+	   {% autoescape off %}{{ mystr }}{% endautoescape %}
+	   <div id="translation">
+	       <em>pronunciation:</em> arigatou<br />
+	       <em>meaning:</em> thank you
+	   </div><br /><br />
+	   <button id="show_element" class="btn btn-success btn-sm" role="button">show answer</button>
+	</div>
+{% endblock %}
+
+
+
+
+
+
