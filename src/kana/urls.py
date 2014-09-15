@@ -13,9 +13,9 @@ urlpatterns = [
     # ex: /kana/mnemonics_handler/
     url(r'^mnemonics_handler/$', views.mnemonics_handler, name='mnemonics_handler'),
     # ex: /kana/5/
-    url(r'^(?P<kana_id>[0-9]+)/$', views.detail, name='detail'),
+    url(r'^(?P<kana_order>[0-9]+)/$', views.detail, name='detail'),
     # ex: /kana/5/results/
-    url(r'^(?P<kana_id>[0-9]+)/results/$', views.results, name='results'),
+    url(r'^(?P<kana_order>[0-9]+)/results/$', views.results, name='results'),
 
     
 ]

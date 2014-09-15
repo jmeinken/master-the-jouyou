@@ -1,6 +1,6 @@
 from django.shortcuts import HttpResponse
 from django.shortcuts import render, get_object_or_404
-from kana.models import base_kana, derived_kana, hiragana_sections, katakana_sections
+from kana.models import kana, combinations, hiragana_sections, katakana_sections, word
 from account_manager.helpers import getSessionOrAccountData, \
                     setSessionOrAccountData, \
                     deleteSessionOrAccountData
@@ -12,7 +12,6 @@ from kana.helpers import *
 
 
 def hiragana(request):
-    some_kana = base_kana.objects.all().order_by('id')[:15]
     # session management
     next_incomplete_section_found = False
     next_incomplete_section = None
@@ -40,8 +39,7 @@ def hiragana(request):
     else:
         logged_in = False
         username = None
-    context = {'some_kana': some_kana, 
-               'sections': hiragana_sections,
+    context = {'sections': hiragana_sections,
                'next_incomplete_section': next_incomplete_section,
                'logged_in': logged_in,
                'username': username,
@@ -50,7 +48,6 @@ def hiragana(request):
     return render(request, 'kana/index.html', context)
 
 def katakana(request):
-    some_kana = base_kana.objects.all().order_by('id')[:15]
     # session management
     next_incomplete_section_found = False
     next_incomplete_section = None
@@ -78,8 +75,7 @@ def katakana(request):
     else:
         logged_in = False
         username = None
-    context = {'some_kana': some_kana, 
-               'sections': katakana_sections,
+    context = {'sections': katakana_sections,
                'next_incomplete_section': next_incomplete_section,
                'logged_in': logged_in,
                'username': username,
@@ -87,34 +83,44 @@ def katakana(request):
                'module_number': 2}
     return render(request, 'kana/index.html', context)
 
-def detail(request, kana_id):
-    kana = get_object_or_404(base_kana, pk=kana_id)
+def detail(request, kana_order):
+    # check login status
+    if request.user.is_authenticated():
+        logged_in = True
+        username = request.user.username
+    else:
+        logged_in = False
+        username = None
+    #get the requested kana object
+    kana_record = kana.objects.get(kana_order=kana_order)
+    #get any child kana objects
+    modifications = kana.objects.filter(parent=kana_record.kana)
     # determine if katakana or hiragana
-    if kana.id <= hiragana_sections[-1]['end']:
+    if kana_record.kana_order <= hiragana_sections[-1]['end']:
         sections = hiragana_sections
         module_name="hiragana"
     else:
         sections = katakana_sections
         module_name="katakana"
-    nextKana = kana.id+1
-    previousKana = kana.id-1
-    modifications = derived_kana.objects.filter(base_kana_id=kana_id)
+    #set variables used for record navigation
+    nextKana = kana_record.kana_order+1
+    previousKana = kana_record.kana_order-1
     for i,section in enumerate(sections):
-        if kana.id >= section['start'] and kana.id <=section['end']:
+        if kana_record.kana_order >= section['start'] and kana_record.kana_order <=section['end']:
             section_index = i
-            first_in_section = True if kana.id == section['start'] else False
-            last_in_section = True if kana.id == section['end'] else False   
+            first_in_section = True if kana_record.kana_order == section['start'] else False
+            last_in_section = True if kana_record.kana_order == section['end'] else False   
             section_name = section['name'] 
             section_name = "Hiragana Section " + str(section['section'])
             break
-    section_start_id = sections[section_index]['start'] - 1
-    section_end_id = sections[section_index]['end'] - 1
-    section_kanas = base_kana.objects.all().order_by('id')[section_start_id:section_end_id+1]
-    if kana.id == sections[-1]['end']:
+    section_start_id = sections[section_index]['start']
+    section_end_id = sections[section_index]['end']
+    section_kanas = kana.objects.filter(kana_order__gte=section_start_id, kana_order__lte=section_end_id).order_by('kana_order')
+    if kana_record.kana_order == sections[-1]['end']:
         last_in_module = True
     else:
         last_in_module = False
-    if kana.id == sections[0]['start']:
+    if kana_record.kana_order == sections[0]['start']:
         first_in_module = True
     else:
         first_in_module = False
@@ -134,21 +140,16 @@ def detail(request, kana_id):
             if module_finished:
                 setSessionOrAccountData(request, module_name + '_module_finished', True)
         elif not first_in_section:            
-            setSessionOrAccountData(request, section_char_id_key, kana_id)
+            setSessionOrAccountData(request, section_char_id_key, kana_record.kana_order)
             setSessionOrAccountData(request, module_name + '_module_started', True)
-    user_mnemonic = getSessionOrAccountData(request, 'kana_mnemonic_' + kana_id)
+    user_mnemonic = getSessionOrAccountData(request, 'kana_mnemonic_' + str(kana_record.kana_order))
     # end session management
+    # add lookup popovers to appropriate fields
     if module_name=="katakana":
-        pronunciation = add_popovers(request, kana.pronunciation)
+        pronunciation = add_popovers(request, kana_record.hiragana_equivalent)
     else:
-        pronunciation = kana.pronunciation
-    if request.user.is_authenticated():
-        logged_in = True
-        username = request.user.username
-    else:
-        logged_in = False
-        username = None
-    context = {'kana': kana, 
+        pronunciation = kana_record.pronunciation
+    context = {'kana': kana_record, 
                'nextKana': nextKana, 
                'previousKana': previousKana,
                'section_kanas': section_kanas, 
@@ -179,21 +180,17 @@ def mnemonics_handler(request):
                                 strip_tags(request.GET['mnemonics_text']))
         result = getSessionOrAccountData(request, key)
         if not result:
-            kana = get_object_or_404(base_kana, pk=request.GET['kana_number'])
-            result = kana.mnemonic
+            kana_object = get_object_or_404(kana, pk=request.GET['kana_number'])
+            result = kana_object.mnemonic
         return HttpResponse(json.dumps( {'mnemonics_text': result} ))
 
 def test(request):
     return render(request, 'kana/test.html', None)
 
 def practice(request):
-    kana1 = get_object_or_404(base_kana, pk=1)
-    kana2 = get_object_or_404(base_kana, pk=40)
-    kana3 = get_object_or_404(base_kana, pk=6)
-    kana4 = get_object_or_404(base_kana, pk=20)
-    kana5 = get_object_or_404(base_kana, pk=3)
-    arigatou = kana1.kana + kana2.kana + kana3.kana + kana4.kana + kana5.kana  
-    mystr = practicify(request, arigatou)
+    x = 16
+    word_record = word.objects.get(id=x)
+    mystr = practicify(request, word_record.word)
     context = {'mystr': mystr
                
                }

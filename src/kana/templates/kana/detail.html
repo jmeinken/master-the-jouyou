@@ -113,7 +113,7 @@ $(document).keydown(function(e) {
     <div id="demo" class="collapse">
     <em>Add/Change mnemonic:</em>
 	    <form name="mnemonics_form" id="mnemonics_form" action="">
-	        <input type="hidden" name="kana_number" value="{{ kana.id }}" />
+	        <input type="hidden" name="kana_number" value="{{ kana.kana_order }}" />
 	        <textarea name="mnemonics_text" id="mnemonics_text" rows="4" cols="50" maxlength="500"
 	            >{% if user_mnemonic %}{{ user_mnemonic }}{% endif %}</textarea>
 	        <input type="submit" name="submit" class="button" id="mnemonics_button" value="Submit" />
@@ -127,13 +127,13 @@ $(document).keydown(function(e) {
    {% if section_kanas %}
        <span class="list-group-item active" style="background-color:#033c73">{{ section_name }}</span>
     {% for section_kana in section_kanas %}
-        {% if section_kana.id == kana.id %}
-            <a href="{% url 'kana:detail' section_kana.id %}" class="list-group-item active">
-                {{ section_kana.id }}. <strong>[ {{ section_kana.kana }} ]</strong>
+        {% if section_kana.kana_order == kana.kana_order %}
+            <a href="{% url 'kana:detail' section_kana.kana_order %}" class="list-group-item active">
+                {{ section_kana.kana_order }}. <strong>[ {{ section_kana.kana }} ]</strong>
             </a>
         {% else %}
-            <a href="{% url 'kana:detail' section_kana.id %}" class="list-group-item">
-                {{ section_kana.id }}. <strong>[ {{ section_kana.kana }} ]</strong>
+            <a href="{% url 'kana:detail' section_kana.kana_order %}" class="list-group-item">
+                {{ section_kana.kana_order }}. <strong>[ {{ section_kana.kana }} ]</strong>
             </a>
         {% endif %}
     {% endfor %}

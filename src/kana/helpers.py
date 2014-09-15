@@ -1,4 +1,4 @@
-from kana.models import base_kana
+from kana.models import kana
 from django.core.urlresolvers import reverse
 from account_manager.helpers import getSessionOrAccountData
 
@@ -7,8 +7,15 @@ from account_manager.helpers import getSessionOrAccountData
 def add_popovers(request, string):
     popover_string = ''
     for char in string:
-        kana = base_kana.objects.get(kana=char)
-        personal_mnemonic_key = "kana_mnemonic_" + str(kana.id)
+        kana_record = kana.objects.get(kana=char)
+        # if appropriate, get parent kana for link
+        if kana_record.kana_order == 0:
+            parent_record = kana.objects.get(kana=kana_record.parent)
+            kana_link = parent_record.kana_order
+            personal_mnemonic_key = "kana_mnemonic_" + str(parent_record.kana_order)
+        else:
+            kana_link = kana_record.kana_order
+            personal_mnemonic_key = "kana_mnemonic_" + str(kana_record.kana_order)
         mnemonic =  getSessionOrAccountData(request, personal_mnemonic_key)
         if mnemonic:
             mnemonic = "<em>mnemonic:</em> " + mnemonic + "<br><br>"
@@ -19,9 +26,9 @@ def add_popovers(request, string):
         rel="popover" data-placement="bottom"
         data-content="''' + \
                 mnemonic + '''
-                <a href=\'''' + reverse('kana:detail', kwargs={'kana_id': kana.id}) + '''\'>More...</a>"
+                <a href=\'''' + reverse('kana:detail', kwargs={'kana_order': kana_link}) + '''\'>More...</a>"
         data-original-title="<span style='color:#CC5200;font-size:25px'>''' \
-        + kana.kana +'</span> &nbsp;&nbsp;[ ' + kana.pronunciation + ' ]">' + kana.kana + '</a>'        
+        + kana_record.kana +'</span> &nbsp;&nbsp;[ ' + kana_record.pronunciation + ' ]">' + kana_record.kana + '</a>'        
     return popover_string
 
 def tab(string, indent=0):
@@ -31,11 +38,14 @@ def tab(string, indent=0):
     return '\n' + indent_string + string
 
 def get_pronunciation(char):
-    kana = base_kana.objects.get(kana=char)
-    return kana.pronunciation
+    kana_record = kana.objects.get(kana=char)
+    return kana_record.pronunciation
     
 
 def practicify(request, string):
+    # create groups for get_pronunciation
+       
+    # end create groups
     mystr = tab('<table class="center_table">')
     mystr += tab("<tr>",1)
     for char in string:
