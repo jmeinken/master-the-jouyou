@@ -1,4 +1,6 @@
-from kana.models import kana
+# coding=utf-8
+
+from kana.models import kana, combinations
 from django.core.urlresolvers import reverse
 from account_manager.helpers import getSessionOrAccountData
 
@@ -21,12 +23,11 @@ def add_popovers(request, string):
             mnemonic = "<em>mnemonic:</em> " + mnemonic + "<br><br>"
         else:
             mnemonic = ''
-        popover_string += '''
-        <a href="#" class="add_popover" style="text-decoration: none;" 
+        popover_string += '''<a href="#" class="add_popover" style="text-decoration: none;" 
         rel="popover" data-placement="bottom"
         data-content="''' + \
-                mnemonic + '''
-                <a href=\'''' + reverse('kana:detail', kwargs={'kana_order': kana_link}) + '''\'>More...</a>"
+                mnemonic + \
+        '''<a href=\'''' + reverse('kana:detail', kwargs={'kana_order': kana_link}) + '''\'>More...</a>"
         data-original-title="<span style='color:#CC5200;font-size:25px'>''' \
         + kana_record.kana +'</span> &nbsp;&nbsp;[ ' + kana_record.pronunciation + ' ]">' + kana_record.kana + '</a>'        
     return popover_string
@@ -38,21 +39,49 @@ def tab(string, indent=0):
     return '\n' + indent_string + string
 
 def get_pronunciation(char):
-    kana_record = kana.objects.get(kana=char)
-    return kana_record.pronunciation
-    
+    if len(char) == 1:
+        kana_record = kana.objects.get(kana=char)
+        return kana_record.pronunciation
+    elif 'っ' in char:
+        kana_record = kana.objects.get(kana=char[1])
+        return kana_record.pronunciation[0] + kana_record.pronunciation
+    elif 'ー' in char:
+        kana_record = kana.objects.get(kana=char[0])
+        return kana_record.pronunciation + kana_record.pronunciation[-1]
+    else:
+        kana_record = combinations.objects.get(kana=char)
+        return kana_record.pronunciation
+
+def string_to_char_list(string): 
+    group_with_before = ('ゃ', 'ゅ', 'ょ', 'ャ', 'ュ', 'ョ', 'ァ', 'ィ', 'ゥ', 'ェ', 'ォ', 'ー')
+    group_with_after = ('っ',)
+    char_list = []
+    for char in string:
+        if char in group_with_after:
+            char_temp = char
+        elif char in group_with_before:
+            char_list[-1] += char
+        else:
+            if 'char_temp' in locals():
+                char_list.append(char_temp + char);
+                del char_temp
+            else:
+                char_list.append(char)
+    return char_list  
 
 def practicify(request, string):
     # create groups for get_pronunciation
-       
+    char_list = string_to_char_list(string)
+    for char in char_list:
+        print(len(char))
     # end create groups
     mystr = tab('<table class="center_table">')
     mystr += tab("<tr>",1)
-    for char in string:
+    for char in char_list:
         mystr += tab('<td class="pronunciation">' + get_pronunciation(char) + '</td>', 2)
     mystr += tab('</tr>',1)
     mystr += tab("<tr>",1)
-    for char in string:
+    for char in char_list:
         mystr += tab('<td class="char">' + add_popovers(request, char) + '</td>', 2)
     mystr += tab("</tr>",1)
     mystr += tab("</table>")

@@ -33,9 +33,9 @@ class word(models.Model):
 #    model = derived_kana
 #    extra = 4
 #
-#class kana_admin(admin.ModelAdmin):
-#    inlines = [derived_kana_inline]
-#    list_display = ('id', 'kana', 'pronunciation')
+class kana_admin(admin.ModelAdmin):
+    #    inlines = [derived_kana_inline]
+    list_display = ('kana_order', 'kana', 'pronunciation')
     
 hiragana_sections = [
                         {'start':1, 'end':15, 'section': 1, 'name':"Hiragana 1 - 15"},
@@ -50,6 +50,6 @@ katakana_sections = [
                      ]
 
 
-admin.site.register(kana)
+admin.site.register(kana, kana_admin)
 admin.site.register(combinations)
 admin.site.register(word)

@@ -85,7 +85,7 @@ $(document).keydown(function(e) {
     
     
 	<p>
-	<span style="text-size: 30px">
+	<span style="font-size:30px">
 		[ <strong>{% autoescape off %}{{ pronunciation }}{% endautoescape %}</strong> ]
 	</span>&nbsp;&nbsp;
 	{% if kana.pronunciation_tip %}
@@ -94,7 +94,8 @@ $(document).keydown(function(e) {
     {% if modifications %}
     <br /><em>Modifications:</em>
     {% for kana in modifications %}
-        {{ kana.kana }}  ({{kana.pronunciation }})&nbsp;&nbsp;&nbsp;&nbsp;
+        <strong><span style="color:#CC5200;font-size:30px;">{{ kana.kana }}</span></strong>  
+        ({{kana.pronunciation }})&nbsp;&nbsp;&nbsp;&nbsp;
     {% endfor %}
     {% endif %}	 
         </p>

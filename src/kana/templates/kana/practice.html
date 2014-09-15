@@ -33,19 +33,32 @@ $(function() {
     $('.add_popover').popover({ html : true });
     
     $('#show_element').click(function() {
-        $('.pronunciation').css('visibility', 'visible');
-        $('#translation').css('visibility', 'visible');
-        $('#show_element').html('next question &raquo;');
+        if ( $('#show_element').html() == 'show answer' )  {
+            $('.pronunciation').css('visibility', 'visible');
+            $('#translation').css('visibility', 'visible');
+            $('#show_element').html('next question &raquo;');
+        } else {
+            location.reload();
+        }
+        
     });
     
-
-    
 });
+
+//action on left arrow (37) and right arrow (39) keypress
+$(document).keydown(function(e) {
+		    if (e.which == 39) { 
+		       $('#show_element').click();
+		       e.preventDefault();
+		       return false;
+		    }
+		});
+
 
 {% endblock %}
 
 
-{% block header %}Hiragana Practice{% endblock %}
+{% block header %}Vocabulary Practice{% endblock %}
 
 {% block content %}
     <div class="top_left">
@@ -62,8 +75,8 @@ $(function() {
 	<div class="text-center">
 	   {% autoescape off %}{{ mystr }}{% endautoescape %}
 	   <div id="translation">
-	       <em>pronunciation:</em> arigatou<br />
-	       <em>meaning:</em> thank you
+	       <em>pronunciation:</em> {{ pronunciation }}<br />
+	       <em>meaning:</em> {{ translation }}
 	   </div><br /><br />
 	   <button id="show_element" class="btn btn-success btn-sm" role="button">show answer</button>
 	</div>

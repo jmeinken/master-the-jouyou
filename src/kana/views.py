@@ -188,11 +188,12 @@ def test(request):
     return render(request, 'kana/test.html', None)
 
 def practice(request):
-    x = 16
-    word_record = word.objects.get(id=x)
+    x = 17
+    word_record = word.objects.order_by('?')[0]
     mystr = practicify(request, word_record.word)
-    context = {'mystr': mystr
-               
+    context = {'mystr': mystr,
+               'pronunciation': word_record.pronunciation,
+               'translation': word_record.translation,
                }
     return render(request, 'kana/practice.html', context)
 
