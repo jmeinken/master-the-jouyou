@@ -1,4 +1,4 @@
-{% extends "right_sidebar_shell.html" %}
+{% extends "no_sidebar_shell.html" %}
 {% load staticfiles %}
 
 {% block title %}
@@ -22,6 +22,7 @@
 	  margin: 0 auto !important;
 	  float: none !important;
 	}
+	
 {% endblock %}
 
 
@@ -73,10 +74,11 @@ $(document).keydown(function(e) {
 
 {% block links %}
 	<div class="text-center">
-	   {% autoescape off %}{{ mystr }}{% endautoescape %}
-	   <div id="translation">
-	       <em>pronunciation:</em> {{ pronunciation }}<br />
-	       <em>meaning:</em> {{ translation }}
+	   {% autoescape off %}{{ word_table }}{% endautoescape %}
+	   <div id="translation" style="font-size:30px">
+	       {% for string in extra_info %}
+	           {{ string }}<br>
+	       {% endfor %}
 	   </div><br /><br />
 	   <button id="show_element" class="btn btn-success btn-sm" role="button">show answer</button>
 	</div>

@@ -64,9 +64,10 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Practice <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">Flashcards</a></li>
-                            <li><a href="{% url 'kana:practice' %}">Vocabulary Practice</a></li>
+                            <li><a href="{% url 'kana:practice' 1 %}">Flashcards</a></li>
+                            <li><a href="{% url 'kana:practice' 2 %}">Vocabulary Practice</a></li>
                             <li><a href="#">Reading Practice</a></li>
+                            <li><a href="{% url 'kana:practice' 4 %}">Mixed Practice</a></li>
                         </ul>
                     </li>
                     <li><a href="#">About</a></li>

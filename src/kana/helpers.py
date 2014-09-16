@@ -9,7 +9,12 @@ from account_manager.helpers import getSessionOrAccountData
 def add_popovers(request, string):
     popover_string = ''
     for char in string:
-        kana_record = kana.objects.get(kana=char)
+        # if not found in database, simply return character
+        try:
+            kana_record = kana.objects.get(kana=char)
+        except:
+            popover_string += char
+            continue            
         # if appropriate, get parent kana for link
         if kana_record.kana_order == 0:
             parent_record = kana.objects.get(kana=kana_record.parent)
@@ -32,6 +37,15 @@ def add_popovers(request, string):
         + kana_record.kana +'</span> &nbsp;&nbsp;[ ' + kana_record.pronunciation + ' ]">' + kana_record.kana + '</a>'        
     return popover_string
 
+def get_kana_link(char):
+    kana_record = kana.objects.get(kana=char)
+    if kana_record.kana_order == 0:
+        parent_record = kana.objects.get(kana=kana_record.parent)
+        kana_link = parent_record.kana_order
+    else:
+        kana_link = kana_record.kana_order
+    return kana_link
+
 def tab(string, indent=0):
     indent_string = ''
     for i in range(0,indent):
@@ -39,6 +53,13 @@ def tab(string, indent=0):
     return '\n' + indent_string + string
 
 def get_pronunciation(char):
+    # skip if not in database
+    try:
+        for mychar in char:
+            kana_record = kana.objects.get(kana=mychar)
+    except:
+        print("exception")
+        return ""
     if len(char) == 1:
         kana_record = kana.objects.get(kana=char)
         return kana_record.pronunciation
@@ -49,7 +70,10 @@ def get_pronunciation(char):
         kana_record = kana.objects.get(kana=char[0])
         return kana_record.pronunciation + kana_record.pronunciation[-1]
     else:
-        kana_record = combinations.objects.get(kana=char)
+        try:
+            kana_record = combinations.objects.get(kana=char)
+        except:
+            return ""
         return kana_record.pronunciation
 
 def string_to_char_list(string): 
@@ -72,8 +96,6 @@ def string_to_char_list(string):
 def practicify(request, string):
     # create groups for get_pronunciation
     char_list = string_to_char_list(string)
-    for char in char_list:
-        print(len(char))
     # end create groups
     mystr = tab('<table class="center_table">')
     mystr += tab("<tr>",1)
@@ -86,4 +108,5 @@ def practicify(request, string):
     mystr += tab("</tr>",1)
     mystr += tab("</table>")
     return mystr
+
 

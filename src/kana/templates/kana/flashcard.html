@@ -1,0 +1,128 @@
+{% extends "no_sidebar_shell.html" %}
+{% load staticfiles %}
+
+{% block title %}
+	[ Practice ] Master the Jo&#773;yo&#773;
+{% endblock %}
+
+{% block css %}
+	.pronunciation {
+	    font-size: 20px;
+	    text-align: center;
+	    visibility: hidden;
+	}
+	.char  {
+	    font-size: 100px;
+	    text-align: center;
+	}
+    #translation  {
+    	visibility: hidden;
+    }
+	.center_table {
+	  width: 100%;
+	}
+	#flashcard  {
+	    padding: 5px;
+	    margin: 20px;
+	    border: black solid 2px;
+	    text-align: center;
+	}
+	#kana_cell  {
+	    font-size: 70px;
+	    text-align: left;
+	    color:#CC5200;
+	}
+	#info_cell  {
+	    visibility: hidden;
+	}
+	#pronunciation  {
+	    font-size: 20px;	
+	}
+	.padded td {
+	    padding: 20px;
+	}
+	.center_align  {
+	    text-align: center;
+	}
+{% endblock %}
+
+
+{% block js %}
+		
+//ajax for mnemonics change
+$(function() {
+    
+    $('.add_popover').popover({ html : true });
+    
+    $('#show_element').click(function() {
+        if ( $('#show_element').html() == 'show answer' )  {
+            $('#info_cell').css('visibility', 'visible');
+            $('#show_element').html('next question &raquo;');
+        } else {
+            location.reload();
+        }
+        
+    });
+    
+});
+
+//action on left arrow (37) and right arrow (39) keypress
+$(document).keydown(function(e) {
+		    if (e.which == 39) { 
+		       $('#show_element').click();
+		       e.preventDefault();
+		       return false;
+		    }
+		});
+
+
+{% endblock %}
+
+
+{% block header %}Vocabulary Practice{% endblock %}
+
+{% block content %}
+    <div class="top_left">
+	    <a href="#">&laquo; Previous question</a>
+    </div>
+    <div class="top_right">
+     	<a href="#" class="btn btn-primary" role="button">Next question &raquo;</a>
+    </div>
+{% endblock %}
+
+
+
+{% block links %}
+	<div class="col-lg-3">&nbsp;</div>
+	<div class="col-lg-6 center_align">
+	    <div id="flashcard">
+	    <table class="center_table padded">
+	        <tr>
+	            <td id="kana_cell">
+	                {{ kana_record.kana }}
+	            </td>
+	            <td id="info_cell">
+	                <span id="pronunciation">[ {{ kana_record.pronunciation }} ]</span><br>
+	                {% if kana_record.pronunciation_tip %}
+	                    {{ kana_record.pronunciation_tip }}<br>
+	                {% endif %}
+	                {% if kana_record.mnemonic %}
+	                    <em>mnemonic:</em> {{ kana_record.mnemonic }}<br>
+	                {% endif %}
+	                <br><a href="{% url 'kana:detail' kana_link %}">More...</a>
+	            </td>
+	        </tr>
+	    </table>	  
+	    </div> 
+	    <button id="show_element" class="btn btn-success btn-sm" role="button">show answer</button>
+	</div>
+	<div class="col-lg-3">&nbsp;</div>
+{% endblock %}
+
+
+
+
+
+
+
+

@@ -4,7 +4,7 @@ from kana.models import kana, combinations, hiragana_sections, katakana_sections
 from account_manager.helpers import getSessionOrAccountData, \
                     setSessionOrAccountData, \
                     deleteSessionOrAccountData
-import json
+import json, random
 from django.utils.html import strip_tags
 from kana.helpers import *
                     
@@ -187,16 +187,32 @@ def mnemonics_handler(request):
 def test(request):
     return render(request, 'kana/test.html', None)
 
-def practice(request):
-    x = 17
-    word_record = word.objects.order_by('?')[0]
-    mystr = practicify(request, word_record.word)
-    context = {'mystr': mystr,
-               'pronunciation': word_record.pronunciation,
-               'translation': word_record.translation,
-               }
-    return render(request, 'kana/practice.html', context)
-
+def practice(request, type):
+    if int(type) == 4:
+        x = random.randint(1,2)
+    else:
+        x = int(type)
+    if x == 1:
+        kana_record = kana.objects.order_by('?')[0]
+        kana_link = get_kana_link(kana_record.kana)
+        context = {'kana_record': kana_record,
+                   'pronunciation': kana_record.mnemonic,
+                   'translation': kana_record.pronunciation,
+                   'kana_link': kana_link,
+                   }
+        return render(request, 'kana/flashcard.html', context)
+    if x == 2:
+        word_record = word.objects.order_by('?')[0]
+        print(word_record.translation)
+        word_table = practicify(request, word_record.word)
+        # word_table = word_record.word
+        print(len(word_record.word))
+        extra_info = [word_record.translation]
+        context = {'word_table': word_table,
+                   'extra_info': extra_info,
+                   }
+        return render(request, 'kana/vocabulary.html', context)
+    
 
             
         

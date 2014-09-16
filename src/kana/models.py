@@ -37,6 +37,12 @@ class kana_admin(admin.ModelAdmin):
     #    inlines = [derived_kana_inline]
     list_display = ('kana_order', 'kana', 'pronunciation')
     
+class word_admin(admin.ModelAdmin):
+    list_display = ('id', 'word', 'translation')
+    
+class combination_admin(admin.ModelAdmin):
+    list_display = ('id', 'kana', 'pronunciation')
+    
 hiragana_sections = [
                         {'start':1, 'end':15, 'section': 1, 'name':"Hiragana 1 - 15"},
                         {'start':16, 'end':30, 'section': 2, 'name':"Hiragana 16 - 30"},
@@ -51,5 +57,5 @@ katakana_sections = [
 
 
 admin.site.register(kana, kana_admin)
-admin.site.register(combinations)
-admin.site.register(word)
+admin.site.register(combinations, combination_admin)
+admin.site.register(word, word_admin)
