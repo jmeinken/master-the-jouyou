@@ -1,4 +1,4 @@
-# coding=utf-8
+# coding: utf-8
 
 from kana.models import kana, combinations
 from django.core.urlresolvers import reverse
@@ -63,10 +63,10 @@ def get_pronunciation(char):
     if len(char) == 1:
         kana_record = kana.objects.get(kana=char)
         return kana_record.pronunciation
-    elif 'っ' in char:
+    elif u'っ' in char:
         kana_record = kana.objects.get(kana=char[1])
         return kana_record.pronunciation[0] + kana_record.pronunciation
-    elif 'ー' in char:
+    elif u'ー' in char:
         kana_record = kana.objects.get(kana=char[0])
         return kana_record.pronunciation + kana_record.pronunciation[-1]
     else:
@@ -77,8 +77,8 @@ def get_pronunciation(char):
         return kana_record.pronunciation
 
 def string_to_char_list(string): 
-    group_with_before = ('ゃ', 'ゅ', 'ょ', 'ャ', 'ュ', 'ョ', 'ァ', 'ィ', 'ゥ', 'ェ', 'ォ', 'ー')
-    group_with_after = ('っ',)
+    group_with_before = (u'ゃ', u'ゅ', u'ょ', u'ャ', u'ュ', u'ョ', u'ァ', u'ィ', u'ゥ', u'ェ', u'ォ', u'ー')
+    group_with_after = (u'っ',)
     char_list = []
     for char in string:
         if char in group_with_after:
